@@ -110,8 +110,11 @@ func handleOpenGraphRequest(w http.ResponseWriter, r *http.Request) {
 
 	imageBytes, err := takeScreenshot(fmt.Sprintf("http://localhost:8080/?title=%s&site=%s&date=%s", url.QueryEscape(title), url.QueryEscape(site), url.QueryEscape(date)))
 	if err != nil {
-		log.Fatalf("ERROR: %v", err)
+		log.Printf("Failed to take screenshot: %w\n", err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
 	}
+
 	w.Header().Set("Content-type", "image/jpeg")
 	w.Write(imageBytes)
 }
