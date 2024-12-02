@@ -1,4 +1,4 @@
-FROM golang:1.23-alpine
+FROM golang:1.23-alpine AS build
 
 WORKDIR /app
 
@@ -9,6 +9,15 @@ COPY . .
 
 RUN go build -v -o ./opengraph-image-creator
 
+
+FROM chromedp/headless-shell:latest AS final
+
+WORKDIR /app
+COPY --from=build /app/ ./
+
 EXPOSE 8080
 
-CMD ["./opengraph-image-creator"]
+ENTRYPOINT ["/app/opengraph-image-creator"]
+
+
+
