@@ -27,7 +27,7 @@ func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Get("/", handleRequest)
-	r.Get("/opengraph.jpg", handleOpenGraphRequest)
+	r.Get("/opengraph.png", handleOpenGraphRequest)
 	handleStaticFiles(r, "/static", http.Dir("ui/static"))
 
 	err := http.ListenAndServe(fmt.Sprintf(":%d", 8080), r)
@@ -110,12 +110,12 @@ func handleOpenGraphRequest(w http.ResponseWriter, r *http.Request) {
 
 	imageBytes, err := takeScreenshot(fmt.Sprintf("http://localhost:8080/?title=%s&site=%s&date=%s", url.QueryEscape(title), url.QueryEscape(site), url.QueryEscape(date)))
 	if err != nil {
-		log.Printf("Failed to take screenshot: %w\n", err)
+		log.Printf("Failed to take screenshot: %v\n", err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
-	w.Header().Set("Content-type", "image/jpeg")
+	w.Header().Set("Content-type", "image/png")
 	w.Write(imageBytes)
 }
 
