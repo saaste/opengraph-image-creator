@@ -14,6 +14,7 @@ import (
 	"github.com/chromedp/cdproto/emulation"
 	"github.com/chromedp/chromedp"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 type Data struct {
@@ -24,6 +25,7 @@ type Data struct {
 
 func main() {
 	r := chi.NewRouter()
+	r.Use(middleware.Logger)
 	r.Get("/", handleRequest)
 	r.Get("/opengraph.jpg", handleOpenGraphRequest)
 	handleStaticFiles(r, "/static", http.Dir("ui/static"))
