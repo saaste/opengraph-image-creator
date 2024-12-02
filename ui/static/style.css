@@ -1,0 +1,62 @@
+@font-face {
+    font-family: 'Roboto Mono';
+    src: url('roboto-mono.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    --color-background: rgb(39, 41, 53);
+    --color-block: hsl(231, 15%, 15%);
+    --color-text: rgb(248, 248, 242);
+    --color-strong: rgb(212, 253, 176);
+    --text-title: 80px;
+    --text-site: 40px;
+    --text-date: 30px;
+    --site-text-shadow: 0 0 10px rgba(174, 255, 108, 0.8);
+    
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html, body {
+    padding: 0;
+    margin: 0;
+    font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;;
+}
+
+
+.image {
+    background: url(background.jpg);
+    color: var(--color-text);
+    width: 1200px;
+    height: 630px;
+    display: grid;
+    grid-template-rows: min-content auto min-content;
+    grid-template-areas: "site" "title" "date";
+    padding: 60px 30px;
+}
+
+.title {
+    grid-area: title;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    font-size: var(--text-title);
+}
+
+.site {
+    grid-area: site;
+    font-size: var(--text-site);
+    color: var(--color-strong);
+    text-shadow: var(--site-text-shadow);
+}
+
+.date {
+    grid-area: date;
+    font-size: var(--text-date);
+    padding-top: 15px;
+    border-top: 2px dotted rgb(76, 80, 103);
+}
