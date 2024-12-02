@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
@@ -115,8 +116,11 @@ func handleOpenGraphRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-type", "image/png")
-	w.Write(imageBytes)
+	http.ServeContent(w, r, "opengraph.png", time.Now(), bytes.NewReader(imageBytes))
+
+	// w.Header().Set("Content-Type", "image/png")
+	// w.Header().Set("Content-Length", string(len(imageBytes)))
+	// w.Write(imageBytes)
 }
 
 func takeScreenshot(url string) ([]byte, error) {
