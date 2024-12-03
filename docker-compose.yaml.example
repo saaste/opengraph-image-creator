@@ -1,9 +1,8 @@
 services:
   app:
+    image: ghcr.io/saaste/opengraph-image-creator:latest
     container_name: opengraph-image-creator
-    build:
-      dockerfile: Dockerfile
-      context: .
+    restart: unless-stopped
     ports:
       - "8080:8080"
     volumes:
