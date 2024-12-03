@@ -13,8 +13,9 @@ The application is designed to be run as a [Docker](https://www.docker.com) cont
 1) Copy `config.yaml.example` to `config.yaml` and check the configuration
 2) Copy `docker-compose.yaml.example` to `docker-compose.yaml.example`
 3) Copy `template.html.example` to `template.html`
-2) Design your image ([documentation](#how-to-design-your-image))
-3) Start the container: `docker container up -d`
+4) Create `/static` directory and `/static/style.css` file
+5) Design your image ([documentation](#how-to-design-your-image))
+6) Start the container: `docker container up -d`
 
 By default, the application will listen on port **8080**: http://localhost:8080. Edit `docker-compose.yaml` if you want to change the port.
 
@@ -58,9 +59,9 @@ There are only three **string** variables available:
 - `Date` - Date when the post was published
 
 ### Styles
-Create a `/static` directory and a `/static/style.css` file. If you need any static files, such as images, add them to the `/static` directory.
+Simply define your styles in `/static/style.css`. If you need any static files, such as images or fonts, add them to the `/static` directory as well.
 
-You can design your image as you like, but remember, that the final image will be the same size as the element with `opengraph` class. So, set a fixed width and height in your style definition:
+You can design your image however like, but remember, that the final image will be the same size as the element with the `opengraph` class. So, set a fixed width and height in your style definition:
 
 ```css
 .opengraph {
