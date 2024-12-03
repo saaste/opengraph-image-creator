@@ -1,6 +1,9 @@
 # Open Graph Image Creator
 Simple web service for creating dynamic [Open Graph](https://ogp.me) images. I made this for myself to use with [Hugo](https://gohugo.io), but feel free to use it if you find it useful!
 
+![Example image with site URL, post title and date](docs/example.png)
+
+
 ## Prerequisites
 - [Docker](https://www.docker.com)
 
