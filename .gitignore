@@ -1,1 +1,4 @@
 docker-compose.yaml
+template.html
+config.yaml
+/static

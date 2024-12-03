@@ -1,0 +1,4 @@
+**/static
+docker-compose.yaml.example
+config.yaml.example
+template.html.example

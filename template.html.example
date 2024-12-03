@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <div class="image">
+    <div class="opengraph">
         <div class="title"><span>{{ .Title }}</span></div>
         <div class="site"><span>{{ .Site }}</span></div>
         <div class="date"><span>{{ .Date }}</span></div>
