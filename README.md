@@ -40,7 +40,7 @@ It is **NOT** recommended to use these images directly as it is slow and wastes 
 
 ### HTML template
 The [default template](template.html.example) probably contains all the HTML you need. It is as super simple:
-```
+```html
 <body>
     <div class="opengraph">
         <div class="title"><span>{{ .Title }}</span></div>
