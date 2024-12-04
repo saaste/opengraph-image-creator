@@ -45,6 +45,9 @@ func handleRootRequest(w http.ResponseWriter, r *http.Request) {
 	if title == "" {
 		title = "Title Not Set"
 	}
+	for _, char := range appConfig.LineBreakChars {
+		title = strings.Replace(title, char, fmt.Sprintf("%s<br/>", strings.TrimSpace(char)), 1)
+	}
 
 	site := r.URL.Query().Get("site")
 	if site == "" {

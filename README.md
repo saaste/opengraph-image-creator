@@ -13,8 +13,9 @@ The application is designed to be run as a [Docker](https://www.docker.com) cont
 1) Copy `config.yaml.example` to `config.yaml` and check the configuration
 2) Copy `docker-compose.yaml.example` to `docker-compose.yaml.example`
 3) Copy `template.html.example` to `template.html`
-2) Design your image ([documentation](#how-to-design-your-image))
-3) Start the container: `docker container up -d`
+4) Create `/static` directory and `/static/style.css` file
+5) Design your image ([documentation](#how-to-design-your-image))
+6) Start the container: `docker container up -d`
 
 By default, the application will listen on port **8080**: http://localhost:8080. Edit `docker-compose.yaml` if you want to change the port.
 
@@ -24,6 +25,7 @@ Configuration file: `config.yaml`
 - `site`: Default site value if no `site` URL parameter is provided
 - `secret`: If set, a matching `secret` URL parameter is required to view the preview and to generate the image.
 - `date_format`: The date field will be set to the current time if the URL parameter is not provided. This setting specifies the date format. It uses [Go's date format syntax](https://gosamples.dev/date-time-format-cheatsheet/).
+- `line_break_characters`: Characters or strings that will be replaced with line breaks. Read more below.
 
 ## How to use
 Once the application is running, you can see the HTML preview in http://localhost:8080.
@@ -35,6 +37,29 @@ URL parameters are treated as strings and they are not parsed. This means that a
 When your design is ready, you can get the actual PNG image from http://localhost:8080/opengraph.png. As with the preview, you can change the content using the URL parameters: [http://localhost:8080/opengraph.png?title=My%20Christmas%20Post&site=mysite.com&date=2024-12-24](http://localhost:8080/opengraph.png?title=My%20Christmas%20Post&site=mysite.com&date=2024-12-24)
 
 It is **NOT** recommended to use these images directly as it is slow and wastes resources. Generate the image once and then make a local copy or use some kind of caching mechanism.
+
+### Controlling line breaks
+Sometimes blog posts have titles that are so long that they need to be split into two lines. For me personally, this often happens with posts that have two-part titles, such as *"Travel Diary: 1st Day"*.
+
+Depending on your font size, this is what it might look like:
+```
+Travel Diary: 1st
+Day
+```
+
+Ugly! There is a `line_break_characters` configuration which allows you to specify certain characters or strings to be converted to line breaks.
+
+For example, if `line_break_characters` contains a string `: ` (colon with space), the previous example will look like this:
+```
+Travel Diary:
+1st Day
+```
+
+Much better! Only the first instance of the string is replaced. If you have a post titled *"Game Review: Horizon: Forbidden West"*, the second colon will not be replaced and it will look like this:
+```
+Game Review:
+Horizon: Forbidden West
+```
 
 ## How to design your image
 
@@ -58,9 +83,9 @@ There are only three **string** variables available:
 - `Date` - Date when the post was published
 
 ### Styles
-Create a `/static` directory and a `/static/style.css` file. If you need any static files, such as images, add them to the `/static` directory.
+Simply define your styles in `/static/style.css`. If you need any static files, such as images or fonts, add them to the `/static` directory as well.
 
-You can design your image as you like, but remember, that the final image will be the same size as the element with `opengraph` class. So, set a fixed width and height in your style definition:
+You can design your image however like, but remember, that the final image will be the same size as the element with the `opengraph` class. So, set a fixed width and height in your style definition:
 
 ```css
 .opengraph {
