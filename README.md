@@ -93,3 +93,6 @@ You can design your image however like, but remember, that the final image will 
     height: 630px;
 }
 ```
+
+### JavaScript
+Yes, you can use JavaScript! This allows you to do some fancy stuff, like change the font size based on the length of the title.
