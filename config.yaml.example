@@ -1,3 +1,5 @@
 site: "mysite.net"        # Default site
 secret: ""                # Leave empty for no secret
 date_format: "02.01.2006" # Go date format: https://gosamples.dev/date-time-format-cheatsheet/
+line_break_characters:    # Characters or substrings converted to line breaks
+    - ": "

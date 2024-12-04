@@ -8,9 +8,10 @@ import (
 )
 
 type AppConfig struct {
-	Site       string `yaml:"site"`
-	Secret     string `yaml:"secret"`
-	DateFormat string `yaml:"date_format"`
+	Site           string   `yaml:"site"`
+	Secret         string   `yaml:"secret"`
+	DateFormat     string   `yaml:"date_format"`
+	LineBreakChars []string `yaml:"line_break_characters"`
 }
 
 func Load() (*AppConfig, error) {
