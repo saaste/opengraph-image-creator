@@ -25,6 +25,7 @@ Configuration file: `config.yaml`
 - `site`: Default site value if no `site` URL parameter is provided
 - `secret`: If set, a matching `secret` URL parameter is required to view the preview and to generate the image.
 - `date_format`: The date field will be set to the current time if the URL parameter is not provided. This setting specifies the date format. It uses [Go's date format syntax](https://gosamples.dev/date-time-format-cheatsheet/).
+- `max_cache`: Maximum time the image can be cached. The value is used in the `Cache-Control` header.
 - `line_break_characters`: Characters or strings that will be replaced with line breaks. Read more below.
 
 ## How to use

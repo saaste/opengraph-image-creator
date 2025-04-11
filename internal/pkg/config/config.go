@@ -3,15 +3,17 @@ package config
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"gopkg.in/yaml.v3"
 )
 
 type AppConfig struct {
-	Site           string   `yaml:"site"`
-	Secret         string   `yaml:"secret"`
-	DateFormat     string   `yaml:"date_format"`
-	LineBreakChars []string `yaml:"line_break_characters"`
+	Site           string        `yaml:"site"`
+	Secret         string        `yaml:"secret"`
+	DateFormat     string        `yaml:"date_format"`
+	LineBreakChars []string      `yaml:"line_break_characters"`
+	MaxCache       time.Duration `yaml:"max_cache"`
 }
 
 func Load() (*AppConfig, error) {

@@ -2,6 +2,7 @@ package server
 
 import (
 	"bytes"
+	"crypto/md5"
 	"fmt"
 	"log"
 	"net/http"
@@ -65,6 +66,13 @@ func handleRootRequest(w http.ResponseWriter, r *http.Request) {
 		Date:  date,
 	}
 
+	// Calculate ETag value
+	etagData := []byte(fmt.Sprintf("%s / %s / %s", title, site, date))
+	eTag := fmt.Sprintf("%x", md5.Sum(etagData))
+
+	w.Header().Set("Cache-Control", fmt.Sprintf("max-age: %d", int64(appConfig.MaxCache.Seconds())))
+	w.Header().Set("ETag", eTag)
+
 	err = t.ExecuteTemplate(w, "base", data)
 	if err != nil {
 		log.Printf("ERROR: failed to execute the template: %v", err)
@@ -100,6 +108,13 @@ func handleOpenGraphRequest(w http.ResponseWriter, r *http.Request) {
 	if date == "" {
 		date = time.Now().Format(appConfig.DateFormat)
 	}
+
+	// Calculate ETag value
+	etagData := []byte(fmt.Sprintf("%s / %s / %s", title, site, date))
+	eTag := fmt.Sprintf("%x", md5.Sum(etagData))
+
+	w.Header().Set("Cache-Control", fmt.Sprintf("max-age: %d", int64(appConfig.MaxCache.Seconds())))
+	w.Header().Set("ETag", eTag)
 
 	imageBytes, err := image.TakeScreenshot(fmt.Sprintf("http://localhost:8080/?title=%s&site=%s&date=%s", url.QueryEscape(title), url.QueryEscape(site), url.QueryEscape(date)))
 	if err != nil {
