@@ -4,3 +4,4 @@ date_format: "02.01.2006" # Go date format: https://gosamples.dev/date-time-form
 max_cache: "87600h"       # Duration of the cache header
 line_break_characters:    # Characters or substrings converted to line breaks
     - ": "
+cache_dir: "cache"        # Image cache directory (relative to project path)

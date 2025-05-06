@@ -9,3 +9,4 @@ services:
       - ./config.yaml:/app/config.yaml
       - ./template.html:/app/template.html
       - ./static:/app/static
+      - ./cache:/app/cache

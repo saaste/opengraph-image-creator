@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/saaste/opengraph-image-creator/internal/pkg/cache"
 	"github.com/saaste/opengraph-image-creator/internal/pkg/config"
 	"github.com/saaste/opengraph-image-creator/internal/pkg/image"
 )
@@ -116,9 +117,29 @@ func handleOpenGraphRequest(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", fmt.Sprintf("max-age: %d", int64(appConfig.MaxCache.Seconds())))
 	w.Header().Set("ETag", eTag)
 
+	// Try to get image from the cache
+	cachedImage, err := cache.TryGetImageFromCache(appConfig, eTag)
+	if err != nil {
+		log.Printf("Failed to get image from the cache: %v\n", err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	if cachedImage != nil {
+		http.ServeContent(w, r, "opengraph.png", cachedImage.ModTime, bytes.NewReader(cachedImage.Data))
+		return
+	}
+
 	imageBytes, err := image.TakeScreenshot(fmt.Sprintf("http://localhost:8080/?title=%s&site=%s&date=%s", url.QueryEscape(title), url.QueryEscape(site), url.QueryEscape(date)))
 	if err != nil {
 		log.Printf("Failed to take screenshot: %v\n", err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	err = cache.SaveImageToCache(appConfig, eTag, imageBytes)
+	if err != nil {
+		log.Printf("Failed to save image to cache: %v\n", err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
