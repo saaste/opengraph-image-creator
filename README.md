@@ -14,8 +14,9 @@ The application is designed to be run as a [Docker](https://www.docker.com) cont
 2) Copy `docker-compose.yaml.example` to `docker-compose.yaml.example`
 3) Copy `template.html.example` to `template.html`
 4) Create `/static` directory and `/static/style.css` file
-5) Design your image ([documentation](#how-to-design-your-image))
-6) Start the container: `docker container up -d`
+5) Create `/cache` directory
+6) Design your image ([documentation](#how-to-design-your-image))
+7) Start the container: `docker container up -d`
 
 By default, the application will listen on port **8080**: http://localhost:8080. Edit `docker-compose.yaml` if you want to change the port.
 
@@ -27,6 +28,7 @@ Configuration file: `config.yaml`
 - `date_format`: The date field will be set to the current time if the URL parameter is not provided. This setting specifies the date format. It uses [Go's date format syntax](https://gosamples.dev/date-time-format-cheatsheet/).
 - `max_cache`: Maximum time the image can be cached. The value is used in the `Cache-Control` header.
 - `line_break_characters`: Characters or strings that will be replaced with line breaks. Read more below.
+- `cache_dir`: Image cache directory (relative to project path)
 
 ## How to use
 Once the application is running, you can see the HTML preview in http://localhost:8080.
