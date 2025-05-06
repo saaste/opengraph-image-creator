@@ -14,6 +14,7 @@ type AppConfig struct {
 	DateFormat     string        `yaml:"date_format"`
 	LineBreakChars []string      `yaml:"line_break_characters"`
 	MaxCache       time.Duration `yaml:"max_cache"`
+	CacheDir       string        `yaml:"cache_dir"`
 }
 
 func Load() (*AppConfig, error) {
