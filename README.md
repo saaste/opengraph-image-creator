@@ -11,7 +11,7 @@ Simple web service for creating dynamic [Open Graph](https://ogp.me) images. I m
 The application is designed to be run as a [Docker](https://www.docker.com) container.
 
 1) Copy `config.yaml.example` to `config.yaml` and check the configuration
-2) Copy `docker-compose.yaml.example` to `docker-compose.yaml.example`
+2) Copy `docker-compose.yaml.example` to `docker-compose.yaml`
 3) Copy `template.html.example` to `template.html`
 4) Create `/static` directory and `/static/style.css` file
 5) Create `/cache` directory
