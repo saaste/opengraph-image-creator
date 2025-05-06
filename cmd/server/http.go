@@ -14,7 +14,8 @@ func StartServer(port int) error {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Get("/", handleRootRequest)
-	r.Get("/opengraph.png", handleOpenGraphRequest)
+	r.Get("/opengraph.png", handleOpenGraphPngRequest)
+	r.Get("/opengraph.jpg", handleOpenGraphJpegRequest)
 
 	handleStaticFiles(r, "/static", http.Dir("static"))
 

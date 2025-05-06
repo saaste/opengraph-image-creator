@@ -29,6 +29,7 @@ Configuration file: `config.yaml`
 - `max_cache`: Maximum time the image can be cached. The value is used in the `Cache-Control` header.
 - `line_break_characters`: Characters or strings that will be replaced with line breaks. Read more below.
 - `cache_dir`: Image cache directory (relative to project path)
+- `jpeg_compression`: Compression quality of JPEG image (0-100)
 
 ## How to use
 Once the application is running, you can see the HTML preview in http://localhost:8080.
@@ -37,9 +38,16 @@ You can change the `title`, `site` and `date` using URL parameters, for example 
 
 URL parameters are treated as strings and they are not parsed. This means that all fields, including `date` can contain any text.
 
-When your design is ready, you can get the actual PNG image from http://localhost:8080/opengraph.png. As with the preview, you can change the content using the URL parameters: [http://localhost:8080/opengraph.png?title=My%20Christmas%20Post&site=mysite.com&date=2024-12-24](http://localhost:8080/opengraph.png?title=My%20Christmas%20Post&site=mysite.com&date=2024-12-24)
+When your design is ready, you can get the image from one of the endpoints:
+- http://localhost:8080/opengraph.png (PNG image)
+- http://localhost:8080/opengraph.jpg (JPEG image)
 
-It is **NOT** recommended to use these images directly as it is slow and wastes resources. Generate the image once and then make a local copy or use some kind of caching mechanism.
+As with the preview, you can change the content using the URL parameters: [http://localhost:8080/opengraph.png?title=My%20Christmas%20Post&site=mysite.com&date=2024-12-24](http://localhost:8080/opengraph.png?title=My%20Christmas%20Post&site=mysite.com&date=2024-12-24)
+
+It is **NOT** recommended to hotlink these images directly as it is slow and wastes resources. Generate the image once and then make a local copy or use some kind of caching mechanism.
+
+### Image cache
+Generated images are stored in the directory defined in the configuration file. These files are **NEVER** removed. If you change your OpenGraph image design and want to generate images again, you have to delete cached images manually.
 
 ### Controlling line breaks
 Sometimes blog posts have titles that are so long that they need to be split into two lines. For me personally, this often happens with posts that have two-part titles, such as *"Travel Diary: 1st Day"*.

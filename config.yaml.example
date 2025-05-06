@@ -5,3 +5,4 @@ max_cache: "87600h"       # Duration of the cache header
 line_break_characters:    # Characters or substrings converted to line breaks
     - ": "
 cache_dir: "cache"        # Image cache directory (relative to project path)
+jpeg_compression: 80      # Compression quality of JPEG image (0-100)

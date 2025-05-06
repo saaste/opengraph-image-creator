@@ -82,7 +82,15 @@ func handleRootRequest(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func handleOpenGraphRequest(w http.ResponseWriter, r *http.Request) {
+func handleOpenGraphPngRequest(w http.ResponseWriter, r *http.Request) {
+	handleOpenGraphImageRequest(w, r, cache.ImageTypePng)
+}
+
+func handleOpenGraphJpegRequest(w http.ResponseWriter, r *http.Request) {
+	handleOpenGraphImageRequest(w, r, cache.ImageTypeJpeg)
+}
+
+func handleOpenGraphImageRequest(w http.ResponseWriter, r *http.Request, imageType cache.ImageType) {
 	appConfig, err := config.Load()
 	if err != nil {
 		log.Printf("ERROR: failed to load app config: %v", err)
@@ -118,33 +126,46 @@ func handleOpenGraphRequest(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("ETag", eTag)
 
 	// Try to get image from the cache
-	cachedImage, err := cache.TryGetImageFromCache(appConfig, eTag)
+	cachedImage, err := cache.TryGetImageFromCache(appConfig, eTag, imageType)
 	if err != nil {
 		log.Printf("Failed to get image from the cache: %v\n", err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
+	var outputFileName string
+	switch imageType {
+	case cache.ImageTypePng:
+		outputFileName = "opengraph.png"
+	case cache.ImageTypeJpeg:
+		outputFileName = "opengraph.jpg"
+	default:
+		log.Printf("Invalid image type: %d\n", imageType)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
 	if cachedImage != nil {
-		http.ServeContent(w, r, "opengraph.png", cachedImage.ModTime, bytes.NewReader(cachedImage.Data))
+		http.ServeContent(w, r, outputFileName, cachedImage.ModTime, bytes.NewReader(cachedImage.Data))
 		return
 	}
 
 	imageBytes, err := image.TakeScreenshot(fmt.Sprintf("http://localhost:8080/?title=%s&site=%s&date=%s", url.QueryEscape(title), url.QueryEscape(site), url.QueryEscape(date)))
+
 	if err != nil {
 		log.Printf("Failed to take screenshot: %v\n", err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
-	err = cache.SaveImageToCache(appConfig, eTag, imageBytes)
+	err = cache.SaveImageToCache(appConfig, eTag, imageBytes, imageType)
 	if err != nil {
 		log.Printf("Failed to save image to cache: %v\n", err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
-	http.ServeContent(w, r, "opengraph.png", time.Now(), bytes.NewReader(imageBytes))
+	http.ServeContent(w, r, outputFileName, time.Now(), bytes.NewReader(imageBytes))
 }
 
 func handleStaticFiles(r chi.Router, path string, root http.FileSystem) {
