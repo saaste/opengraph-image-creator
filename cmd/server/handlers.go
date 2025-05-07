@@ -118,6 +118,8 @@ func handleOpenGraphImageRequest(w http.ResponseWriter, r *http.Request, imageTy
 		date = time.Now().Format(appConfig.DateFormat)
 	}
 
+	secret := r.URL.Query().Get("secret")
+
 	// Calculate ETag value
 	etagData := []byte(fmt.Sprintf("%s / %s / %s", title, site, date))
 	eTag := fmt.Sprintf("%x", md5.Sum(etagData))
@@ -137,8 +139,10 @@ func handleOpenGraphImageRequest(w http.ResponseWriter, r *http.Request, imageTy
 	switch imageType {
 	case cache.ImageTypePng:
 		outputFileName = "opengraph.png"
+		w.Header().Set("Content-Type", "image/png")
 	case cache.ImageTypeJpeg:
 		outputFileName = "opengraph.jpg"
+		w.Header().Set("Content-Type", "image/jpeg")
 	default:
 		log.Printf("Invalid image type: %d\n", imageType)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -150,7 +154,7 @@ func handleOpenGraphImageRequest(w http.ResponseWriter, r *http.Request, imageTy
 		return
 	}
 
-	imageBytes, err := image.TakeScreenshot(fmt.Sprintf("http://localhost:8080/?title=%s&site=%s&date=%s", url.QueryEscape(title), url.QueryEscape(site), url.QueryEscape(date)))
+	imageBytes, err := image.TakeScreenshot(fmt.Sprintf("http://localhost:8080/?title=%s&site=%s&date=%s&secret=%s", url.QueryEscape(title), url.QueryEscape(site), url.QueryEscape(date), url.QueryEscape(secret)))
 
 	if err != nil {
 		log.Printf("Failed to take screenshot: %v\n", err)
