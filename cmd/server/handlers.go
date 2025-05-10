@@ -162,14 +162,14 @@ func handleOpenGraphImageRequest(w http.ResponseWriter, r *http.Request, imageTy
 		return
 	}
 
-	err = cache.SaveImageToCache(appConfig, eTag, imageBytes, imageType)
+	cachedImage, err = cache.SaveImageToCache(appConfig, eTag, imageBytes, imageType)
 	if err != nil {
 		log.Printf("Failed to save image to cache: %v\n", err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
-	http.ServeContent(w, r, outputFileName, time.Now(), bytes.NewReader(imageBytes))
+	http.ServeContent(w, r, outputFileName, time.Now(), bytes.NewReader(cachedImage.Data))
 }
 
 func handleStaticFiles(r chi.Router, path string, root http.FileSystem) {

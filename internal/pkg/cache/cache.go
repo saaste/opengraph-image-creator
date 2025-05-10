@@ -64,15 +64,15 @@ func TryGetImageFromCache(appConf *config.AppConfig, key string, imageType Image
 	}, nil
 }
 
-func SaveImageToCache(appConf *config.AppConfig, key string, imageData []byte, imageType ImageType) error {
+func SaveImageToCache(appConf *config.AppConfig, key string, imageData []byte, imageType ImageType) (*CachedImage, error) {
 	err := createCacheDirIfNotExist(appConf)
 	if err != nil {
-		return fmt.Errorf("failed to create the cache directory: %w", err)
+		return nil, fmt.Errorf("failed to create the cache directory: %w", err)
 	}
 
 	img, err := png.Decode(bytes.NewReader(imageData))
 	if err != nil {
-		return fmt.Errorf("failed to decode screenshot as PNG image: %w", err)
+		return nil, fmt.Errorf("failed to decode screenshot as PNG image: %w", err)
 	}
 
 	var filePath string
@@ -82,12 +82,12 @@ func SaveImageToCache(appConf *config.AppConfig, key string, imageData []byte, i
 	case ImageTypeJpeg:
 		filePath = fmt.Sprintf("%s/%s.jpg", appConf.CacheDir, key)
 	default:
-		return fmt.Errorf("invalid image type")
+		return nil, fmt.Errorf("invalid image type")
 	}
 
 	outFile, err := os.Create(filePath)
 	if err != nil {
-		return fmt.Errorf("failed to create the output file: %w", err)
+		return nil, fmt.Errorf("failed to create the output file: %w", err)
 	}
 	defer outFile.Close()
 
@@ -96,15 +96,22 @@ func SaveImageToCache(appConf *config.AppConfig, key string, imageData []byte, i
 		encoder := png.Encoder{
 			CompressionLevel: png.BestCompression,
 		}
-		return encoder.Encode(outFile, img)
+		if err = encoder.Encode(outFile, img); err != nil {
+			return nil, fmt.Errorf("failed to encode PNG image: %w", err)
+		}
 	case ImageTypeJpeg:
 		options := jpeg.Options{
 			Quality: appConf.JpegCompression,
 		}
-		return jpeg.Encode(outFile, img, &options)
+		if err = jpeg.Encode(outFile, img, &options); err != nil {
+			return nil, fmt.Errorf("failed to encode JPEG image: %w", err)
+		}
+
 	default:
-		return fmt.Errorf("invalid image type")
+		return nil, fmt.Errorf("invalid image type")
 	}
+
+	return TryGetImageFromCache(appConf, key, imageType)
 }
 
 func createCacheDirIfNotExist(appConf *config.AppConfig) error {
